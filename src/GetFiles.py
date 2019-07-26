@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 class GetFiles:
@@ -7,13 +8,16 @@ class GetFiles:
         pass
 
     def get(self):
+        print("getting filenames")
         files = []
-        for file in os.listdir(dir):
+        for file in os.listdir(self.dir):
             if file.endswith(".hdf5"):
-                print(os.path.join("/mydir", file))
-                files.append(file)
+                fname= os.path.join(self.dir, file)
+                files.append(fname)
 
         return files
 
 if __name__ == "__main__":
-    pass
+    f = GetFiles()
+    files =f.get()
+    print(files)
