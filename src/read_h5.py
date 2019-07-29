@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """read h5 files from directory"""
+import os
+import datetime
+
 import h5py
 from get_files import GetFiles
 from scicat_post import SciCatPost
@@ -20,6 +23,7 @@ class ReadH5:
         self.files2 = [self.files[0]]
         print(self.files)
         for file_name in self.files2:
+            stat = os.stat(file_name)
             file = h5py.File(file_name, 'r')
             print(file_name)
             keys = list(file.keys())
@@ -34,8 +38,26 @@ class ReadH5:
             file.close()
             print(scimet)
             sci = SciCatPost()
+            date = datetime.datetime.now().isoformat() 
             h5data = {
-                "scientificMetadata": scimet
+                "contactEmail": "clement.derrez@esss.se",
+                "creationLocation": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",
+                "creationTime": date,
+                "datasetName":  "Beam Inst",
+                "description": "Beam Instrumentation data",
+                "endTime": date,
+                "isPublished": True,
+                "keywords": ["neutron", "beam"],
+                "orcidOfOwner": "0000",
+                "owner": "Clement Derrez",
+                "ownerEmail": "clement.derrez@esss.se",
+                "ownerGroup": "ess",
+                "principalInvestigator": "Clement Derrez",
+                "proposalId": "MRV1E2",
+                "scientificMetadata": scimet,
+                "size": stat.st_size,
+                "sourceFolder": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",
+                "type": "raw"
             }
             sci.post(h5data)
 

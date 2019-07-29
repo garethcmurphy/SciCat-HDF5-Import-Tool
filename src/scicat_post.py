@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """post to scicat"""
+import datetime
 import platform
 import urllib
-import json
 
-import requests
 import keyring
+import requests
 
 
 class SciCatPost:
@@ -51,36 +51,30 @@ class SciCatPost:
 
     def create_payload(self, pid, h5data):
         """create payload"""
+        date = datetime.datetime.now().isoformat()
         payload = {
-            "principalInvestigator": "string1",
-            "endTime": "2019-07-29T09:10:04.629Z",
-            "creationLocation": "string2",
-            "dataFormat": "string3",
-            "pid": pid,
-            "owner": "string4",
-            "ownerEmail": "string5",
-            "orcidOfOwner": "string6",
-            "contactEmail": "string7",
-            "sourceFolder": "string8",
-            "type": "raw",
-            "size": 0,
-            "packedSize": 0,
-            "creationTime": "2019-07-29T09:10:04.629Z",
-            "keywords": [
-                "string",
-                "beam"
-            ],
-            "description": "string9",
-            "datasetName": "string10",
+            "accessGroups": ["loki", "odin"],
+            "contactEmail":   h5data.get("contactEmail", "clement.derrez@esss.se"),
+            "creationLocation":   h5data.get("creationLocation", "owncloud"),
+            "creationTime":   h5data.get("creationTime", date),
+            "dataFormat": "hdf5",
+            "datasetName": h5data.get("datasetName", "beam inst"),
+            "description":   h5data.get("description", "beam inst"),
+            "endTime":   h5data.get("endTime", date),
             "isPublished": True,
+            "keywords":  h5data.get("keywords", ["neutron","beam"]),
+            "orcidOfOwner":  h5data.get("orcidOfOwner", "beam inst"),
+            "owner":  h5data.get("owner", "Clement Derrez"),
+            "ownerEmail":  h5data.get("ownerEmail", "MRV1E2"),
             "ownerGroup": "ess",
-            "accessGroups": [
-                "loki",
-                "odin"
-            ],
-            "sampleId": "string11",
-            "proposalId": "string12",
-            "scientificMetadata": h5data["scientificMetadata"]
+            "packedSize": h5data.get("size", 0),
+            "pid": pid,
+            "principalInvestigator":   h5data.get("principalInvestigator", "beam inst"),
+            "proposalId":  h5data.get("proposalId", "MRV1E2"),
+            "scientificMetadata": h5data.get("scientificMetadata", {"a": 1}),
+            "size": h5data.get("size", 0),
+            "sourceFolder":   h5data.get("sourceFolder", "owncloud"),
+            "type": "raw"
         }
         print(payload)
         return payload
