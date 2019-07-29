@@ -4,8 +4,10 @@ import os
 import datetime
 
 import numpy
+import dateutil.parser
 import h5py
 import pytz
+import emoji
 from get_files import GetFiles
 from scicat_post import SciCatPost
 
@@ -30,7 +32,6 @@ class ReadH5:
             if isinstance(val2, numpy.int64):
                 val2 = int(val2)
             self.all_attributes[name+'/'+key] = val2
-            #print ('  "%s/%s": "%s",' % (name,key, val))
 
     def recursive(self, filename):
         """recursive"""
@@ -44,44 +45,46 @@ class ReadH5:
         self.files = get.get()
         self.files2 = [self.files[0]]
         print(self.files)
-        for file_name in self.files2:
+        dataset_offset = 4
+        for file_name in self.files:
+            print(emoji.emojize(':bus:  processing '), file_name)
+            dataset_offset = dataset_offset + 1
+            pid_number = "beam" + str(dataset_offset).zfill(4)
             self.recursive(file_name)
-            # print("all attributes", self.all_attributes)
             stat = os.stat(file_name)
             file = h5py.File(file_name, 'r')
-            # print(file_name)
-            keys = list(file.keys())
-            file_attrs = file.attrs
+            file_attrs = {}
+            for key, val in file.attrs.items():
+                file_attrs[key] = val
+
             print(file_attrs)
-            scimet = {}
-            for key in keys:
-                attributes = file[key].attrs
-                # print(attributes)
-                for name in attributes:
-                    # print("{", name, ":", attributes[name], "}")
-                    binary = attributes[name]
-                    scimet[key+'/'+name] = binary.decode('ascii')
-            file.close()
-            # print(scimet)
-            sci = SciCatPost()
             date = datetime.datetime.now().replace(tzinfo=pytz.utc).isoformat()
-            print(date)
+            measurement_date = file_attrs.get("Measurement date", date)
+            date_object =dateutil.parser.parse(measurement_date)
+            date_string = date_object.replace(tzinfo=pytz.utc).isoformat()
+            print(date_string)
+
+            # print(file_attrs)
+            file.close()
+            sci = SciCatPost()
+            # print(date)
             owncloud_location = "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ"
             owner = "Clement Derrez"
             owner_email = "Clement.Derrez@esss.se"
             h5data = {
                 "contactEmail": owner_email,
                 "creationLocation": owncloud_location,
-                "creationTime": date,
-                "datasetName":  "Beam Inst",
+                "creationTime": date_string,
+                "datasetName":  "Beam Instrumentation " + str(dataset_offset),
                 "description": "Beam Instrumentation data",
-                "endTime": date,
+                "endTime": date_string,
                 "isPublished": True,
                 "keywords": ["neutron", "beam"],
                 "orcidOfOwner": "0000",
                 "owner": owner,
                 "ownerEmail": owner_email,
                 "ownerGroup": "ess",
+                "pid": pid_number,
                 "principalInvestigator": owner,
                 "proposalId": "MRV1E2",
                 "scientificMetadata": self.all_attributes,

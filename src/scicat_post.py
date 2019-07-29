@@ -13,7 +13,7 @@ class SciCatPost:
 
     url_base = "https://scicatapi.esss.dk"
     api = "/api/v3/"
-    url_fragment = "RawDatasets"
+    url_fragment = "Datasets"
     options = {}
 
     def __init__(self):
@@ -49,7 +49,7 @@ class SciCatPost:
 
         return token["id"]
 
-    def create_payload(self, pid, h5data):
+    def create_payload(self, h5data):
         """create payload"""
         date = datetime.datetime.now().isoformat()
         payload = {
@@ -68,7 +68,7 @@ class SciCatPost:
             "ownerEmail":  h5data.get("ownerEmail", "MRV1E2"),
             "ownerGroup": "ess",
             "packedSize": h5data.get("size", 0),
-            "pid": pid,
+            "pid":  h5data.get("pid", "jfklds"),
             "principalInvestigator":   h5data.get("principalInvestigator", "beam inst"),
             "proposalId":  h5data.get("proposalId", "MRV1E2"),
             "scientificMetadata": h5data.get("scientificMetadata", {"a": 1}),
@@ -86,12 +86,14 @@ class SciCatPost:
         uri = self.get_url(token)
         # print(uri)
         prefix = "20.500.12269/"
-        pid = "ghfjesl"
-        payload = self.create_payload(pid, h5data)
+        pid = h5data.get("pid", "xyz")
+        payload = self.create_payload(h5data)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
         requests.delete(delete_uri)
-        requests.post(uri, json=payload)
+        response = requests.post(uri, json=payload)
+        translate = response.json()
+        print(translate["pid"])
 
     def main(self):
         """post to scicat"""
