@@ -3,6 +3,7 @@
 import platform
 import requests
 import keyring
+import urllib
 
 
 class SciCatPost:
@@ -46,60 +47,38 @@ class SciCatPost:
 
         return token["id"]
 
-    def create_payload(self):
+    def create_payload(self, pid):
         """create payload"""
-        pid = "ghfjesl"
         payload = {
-            "principalInvestigator": "string",
+            "principalInvestigator": "string1",
             "endTime": "2019-07-29T09:10:04.629Z",
-            "creationLocation": "string",
-            "dataFormat": "string",
+            "creationLocation": "string2",
+            "dataFormat": "string3",
             "scientificMetadata": {},
             "pid": pid,
-            "owner": "string",
-            "ownerEmail": "string",
-            "orcidOfOwner": "string",
-            "contactEmail": "string",
-            "sourceFolder": "string",
+            "owner": "string4",
+            "ownerEmail": "string5",
+            "orcidOfOwner": "string6",
+            "contactEmail": "string7",
+            "sourceFolder": "string8",
+            "type": "raw",
             "size": 0,
             "packedSize": 0,
             "creationTime": "2019-07-29T09:10:04.629Z",
-            "type": "string",
-            "validationStatus": "string",
             "keywords": [
-                "string"
+                "string",
+                "beam"
             ],
-            "description": "string",
-            "datasetName": "string",
-            "classification": "string",
-            "license": "string",
-            "version": "string",
+            "description": "string9",
+            "datasetName": "string10",
             "isPublished": True,
             "ownerGroup": "ess",
             "accessGroups": [
-                "string"
+                "loki",
+                "odin"
             ],
-            "createdBy": "string",
-            "updatedBy": "string",
-            "createdAt": "2019-07-29T09:10:04.629Z",
-            "updatedAt": "2019-07-29T09:10:04.629Z",
-            "sampleId": "string",
-            "proposalId": "string",
-            "datasetlifecycle": {
-                "archivable": True,
-                "retrievable": False,
-                "publishable": True,
-                "dateOfDiskPurging": "2029-07-29T09:10:04.629Z",
-                "archiveRetentionTime": "2029-07-29T09:10:04.629Z",
-                "dateOfPublishing": "2021-07-29T09:10:04.629Z",
-                "isOnCentralDisk": True,
-                "archiveStatusMessage": "string",
-                "retrieveStatusMessage": "string",
-                "archiveReturnMessage": {},
-                "retrieveReturnMessage": {},
-                "exportedTo": "string",
-                "retrieveIntegrityCheck": True
-            }
+            "sampleId": "string11",
+            "proposalId": "string12"
         }
         return payload
 
@@ -108,9 +87,16 @@ class SciCatPost:
         token = self.get_access_token()
         uri = self.get_url(token)
         print(uri)
-        # payload = {}
-        response = requests.get(uri)
-        # response = requests.payload(uri, payload)
+        prefix = "20.500.12269/"
+        pid = "ghfjesl"
+        payload = self.create_payload(pid)
+        # response = requests.get(uri)
+        delete_uri = self.url_base + self.api + "RawDatasets/" + \
+            urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
+        print(delete_uri)
+        response = requests.delete(delete_uri)
+        print(response.json())
+        response = requests.post(uri, payload)
         print(response.json())
         print(self.url_base)
 
