@@ -2,10 +2,10 @@
 """read h5 files from directory"""
 import os
 import datetime
-import pytz
 
 import numpy
 import h5py
+import pytz
 from get_files import GetFiles
 from scicat_post import SciCatPost
 
@@ -51,6 +51,7 @@ class ReadH5:
             # print(file_name)
             keys = list(file.keys())
             file_attrs = file.attrs
+            print(file_attrs)
             scimet = {}
             for key in keys:
                 attributes = file[key].attrs

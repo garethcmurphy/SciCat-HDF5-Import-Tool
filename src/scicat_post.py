@@ -76,7 +76,7 @@ class SciCatPost:
             "sourceFolder":   h5data.get("sourceFolder", "owncloud"),
             "type": "raw"
         }
-        
+
         # print(payload)
         return payload
 
@@ -92,8 +92,7 @@ class SciCatPost:
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
         # print(delete_uri)
-        response = requests.delete(delete_uri)
-        # print(response.json())
+        requests.delete(delete_uri)
         response = requests.post(uri, json=payload)
         # print(response.json())
         # print(self.url_base)
