@@ -46,7 +46,7 @@ class SciCatPost:
 
         return token["id"]
 
-    def create_payload():
+    def create_payload(self):
         """create payload"""
         payload = {
             "ownerGroup":"ess"
