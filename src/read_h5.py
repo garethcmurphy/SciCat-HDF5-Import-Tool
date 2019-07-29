@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from GetFiles import GetFiles
+from get_files import GetFiles
 import h5py
 
 

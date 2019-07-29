@@ -1,7 +1,9 @@
-# content of test_sample.py
-def inc(x):
-    return x + 1
+"""test"""
+from get_files import GetFiles
 
 
 def test_answer():
-    assert inc(3) == 4
+    """test"""
+    getter = GetFiles()
+
+    assert getter.suffix == ".hdf5"
