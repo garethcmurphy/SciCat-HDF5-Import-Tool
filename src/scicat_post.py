@@ -5,10 +5,10 @@
 class SciCatPost:
     """post to scicat"""
 
-    url_base = "http://scicatapi.esss.dk"
+    url_base = "https://scicatapi.esss.dk"
 
     def __init__(self):
-        pass
+        self.url_base = "http://localhost:3000"
 
     def post(self):
         """post to scicat"""

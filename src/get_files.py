@@ -22,8 +22,12 @@ class GetFiles:
 
         return self.files
 
+    def main(self):
+        """main"""
+        near_files = self.get()
+        print(near_files)
+
 
 if __name__ == "__main__":
-    f = GetFiles()
-    nearfiles = f.get()
-    print(nearfiles)
+    GETTER = GetFiles()
+    GETTER.main()
