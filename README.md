@@ -1,1 +1,1 @@
-# scicatImportH5
+# Scicat Import HDF5
