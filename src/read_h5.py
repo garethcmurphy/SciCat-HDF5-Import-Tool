@@ -3,6 +3,7 @@
 import os
 import datetime
 
+import numpy
 import h5py
 from get_files import GetFiles
 from scicat_post import SciCatPost
@@ -11,9 +12,31 @@ from scicat_post import SciCatPost
 class ReadH5:
     """read h5 files"""
     files = []
+    all_attributes = {}
 
     def __init__(self):
         pass
+
+    def print_attrs(self, name, obj):
+        """recursive"""
+        for key, val in obj.attrs.items():
+            val2= val
+            try:
+                val2 = val.decode('ascii')
+            except AttributeError:
+                pass
+            if isinstance(val2, numpy.int64):
+                val2 = int(val2)
+            self.all_attributes[name+'/'+key] = val2
+            #print ('  "%s/%s": "%s",' % (name,key, val))
+
+    def recursive(self, filename):
+        """recursive"""
+        array = {}
+        file = h5py.File(filename, 'r')
+        print("{")
+        file.visititems(self.print_attrs)
+        print("}")
 
     def read(self):
         """read h5 files"""
@@ -23,6 +46,8 @@ class ReadH5:
         self.files2 = [self.files[0]]
         print(self.files)
         for file_name in self.files2:
+            self.recursive(file_name)
+            print("all attributes", self.all_attributes)
             stat = os.stat(file_name)
             file = h5py.File(file_name, 'r')
             print(file_name)
@@ -38,7 +63,7 @@ class ReadH5:
             file.close()
             print(scimet)
             sci = SciCatPost()
-            date = datetime.datetime.now().isoformat() 
+            date = datetime.datetime.now().isoformat()
             h5data = {
                 "contactEmail": "clement.derrez@esss.se",
                 "creationLocation": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",
@@ -54,7 +79,7 @@ class ReadH5:
                 "ownerGroup": "ess",
                 "principalInvestigator": "Clement Derrez",
                 "proposalId": "MRV1E2",
-                "scientificMetadata": scimet,
+                "scientificMetadata": self.all_attributes,
                 "size": stat.st_size,
                 "sourceFolder": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",
                 "type": "raw"
