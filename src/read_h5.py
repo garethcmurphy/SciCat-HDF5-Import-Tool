@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """read h5 files"""
-from get_files import GetFiles
 import h5py
+from get_files import GetFiles
 
 
 class ReadH5:

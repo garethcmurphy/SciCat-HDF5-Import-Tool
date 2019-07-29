@@ -1,3 +1,14 @@
 {
-    "python.pythonPath": "/Users/garethmurphy/.local/share/virtualenvs/scicatImportH5-FXcKPYpC/bin/python"
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true,
+        "**/__pycache__": true
+    },
+    "python.pythonPath": "/Users/garethmurphy/.local/share/virtualenvs/scicatImportH5-FXcKPYpC/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true
 }
