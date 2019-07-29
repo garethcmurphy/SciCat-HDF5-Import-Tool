@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 "h5json" = "*"
 requests = "*"
+"h5py" = "*"
 
 [dev-packages]
 pylint = "*"

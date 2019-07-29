@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""read h5 files"""
+"""read h5 files from directory"""
 import h5py
 from get_files import GetFiles
 
