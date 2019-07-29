@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """post to scicat"""
+import platform
 import requests
+import keyring
 
 
 class SciCatPost:
@@ -17,12 +19,48 @@ class SciCatPost:
             'uri': self.url_base
         }
 
+    def get_url(self, token):
+        """get URL"""
+        uri = self.url_base + self.api + self.url_fragment +"?access_token=" + token
+        print(uri)
+        return uri
+
+    def get_access_token(self):
+        """get access token"""
+        if platform.system() == 'Darwin':
+            username = "ingestor"
+            password = keyring.get_password('scicat', username)
+        else:
+            pass
+
+        token = ""
+
+        login_url = self.url_base + self.api + "/Users/login"
+        config = {
+            "username": username,
+            "password": password
+        }
+        response = requests.post(login_url, data=config)
+        print(response.json())
+        token = response.json()
+
+        return token["id"]
+
+    def create_payload():
+        """create payload"""
+        payload = {
+            "ownerGroup":"ess"
+        }
+        return payload
+
     def post(self):
         """post to scicat"""
-        uri = self.url_base + self.api + self.url_fragment
+        token = self.get_access_token()
+        uri = self.get_url(token)
         print(uri)
         # payload = {}
         response = requests.get(uri)
+        # response = requests.payload(uri, payload)
         print(response.json())
         print(self.url_base)
 
