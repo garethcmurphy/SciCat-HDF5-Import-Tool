@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """post to scicat"""
 import platform
+import urllib
+
 import requests
 import keyring
-import urllib
 
 
 class SciCatPost:
@@ -54,7 +55,6 @@ class SciCatPost:
             "endTime": "2019-07-29T09:10:04.629Z",
             "creationLocation": "string2",
             "dataFormat": "string3",
-            "scientificMetadata": {},
             "pid": pid,
             "owner": "string4",
             "ownerEmail": "string5",
