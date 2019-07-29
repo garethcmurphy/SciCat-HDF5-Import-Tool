@@ -13,6 +13,7 @@ from scicat_post import SciCatPost
 class ReadH5:
     """read h5 files"""
     files = []
+    files2 = []
     all_attributes = {}
 
     def __init__(self):
@@ -65,9 +66,10 @@ class ReadH5:
             sci = SciCatPost()
             date = datetime.datetime.now().replace(tzinfo=pytz.utc).isoformat()
             print(date)
+            owncloud_location = "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ"
             h5data = {
                 "contactEmail": "clement.derrez@esss.se",
-                "creationLocation": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",
+                "creationLocation": owncloud_location,
                 "creationTime": date,
                 "datasetName":  "Beam Inst",
                 "description": "Beam Instrumentation data",
@@ -82,7 +84,7 @@ class ReadH5:
                 "proposalId": "MRV1E2",
                 "scientificMetadata": self.all_attributes,
                 "size": stat.st_size,
-                "sourceFolder": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",
+                "sourceFolder": owncloud_location,
                 "type": "raw"
             }
             sci.post(h5data)

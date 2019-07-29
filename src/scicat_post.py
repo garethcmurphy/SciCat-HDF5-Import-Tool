@@ -88,14 +88,10 @@ class SciCatPost:
         prefix = "20.500.12269/"
         pid = "ghfjesl"
         payload = self.create_payload(pid, h5data)
-        # response = requests.get(uri)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
-        # print(delete_uri)
         requests.delete(delete_uri)
-        response = requests.post(uri, json=payload)
-        # print(response.json())
-        # print(self.url_base)
+        requests.post(uri, json=payload)
 
     def main(self):
         """post to scicat"""
