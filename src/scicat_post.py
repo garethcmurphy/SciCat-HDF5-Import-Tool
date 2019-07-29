@@ -21,7 +21,7 @@ class SciCatPost:
 
     def get_url(self, token):
         """get URL"""
-        uri = self.url_base + self.api + self.url_fragment +"?access_token=" + token
+        uri = self.url_base + self.api + self.url_fragment + "?access_token=" + token
         print(uri)
         return uri
 
@@ -48,8 +48,58 @@ class SciCatPost:
 
     def create_payload(self):
         """create payload"""
+        pid = "ghfjesl"
         payload = {
-            "ownerGroup":"ess"
+            "principalInvestigator": "string",
+            "endTime": "2019-07-29T09:10:04.629Z",
+            "creationLocation": "string",
+            "dataFormat": "string",
+            "scientificMetadata": {},
+            "pid": pid,
+            "owner": "string",
+            "ownerEmail": "string",
+            "orcidOfOwner": "string",
+            "contactEmail": "string",
+            "sourceFolder": "string",
+            "size": 0,
+            "packedSize": 0,
+            "creationTime": "2019-07-29T09:10:04.629Z",
+            "type": "string",
+            "validationStatus": "string",
+            "keywords": [
+                "string"
+            ],
+            "description": "string",
+            "datasetName": "string",
+            "classification": "string",
+            "license": "string",
+            "version": "string",
+            "isPublished": True,
+            "ownerGroup": "ess",
+            "accessGroups": [
+                "string"
+            ],
+            "createdBy": "string",
+            "updatedBy": "string",
+            "createdAt": "2019-07-29T09:10:04.629Z",
+            "updatedAt": "2019-07-29T09:10:04.629Z",
+            "sampleId": "string",
+            "proposalId": "string",
+            "datasetlifecycle": {
+                "archivable": True,
+                "retrievable": False,
+                "publishable": True,
+                "dateOfDiskPurging": "2029-07-29T09:10:04.629Z",
+                "archiveRetentionTime": "2029-07-29T09:10:04.629Z",
+                "dateOfPublishing": "2021-07-29T09:10:04.629Z",
+                "isOnCentralDisk": True,
+                "archiveStatusMessage": "string",
+                "retrieveStatusMessage": "string",
+                "archiveReturnMessage": {},
+                "retrieveReturnMessage": {},
+                "exportedTo": "string",
+                "retrieveIntegrityCheck": True
+            }
         }
         return payload
 
