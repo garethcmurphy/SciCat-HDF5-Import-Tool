@@ -67,8 +67,10 @@ class ReadH5:
             date = datetime.datetime.now().replace(tzinfo=pytz.utc).isoformat()
             print(date)
             owncloud_location = "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ"
+            owner = "Clement Derrez"
+            owner_email = "Clement.Derrez@esss.se"
             h5data = {
-                "contactEmail": "clement.derrez@esss.se",
+                "contactEmail": owner_email,
                 "creationLocation": owncloud_location,
                 "creationTime": date,
                 "datasetName":  "Beam Inst",
@@ -77,10 +79,10 @@ class ReadH5:
                 "isPublished": True,
                 "keywords": ["neutron", "beam"],
                 "orcidOfOwner": "0000",
-                "owner": "Clement Derrez",
-                "ownerEmail": "clement.derrez@esss.se",
+                "owner": owner,
+                "ownerEmail": owner_email,
                 "ownerGroup": "ess",
-                "principalInvestigator": "Clement Derrez",
+                "principalInvestigator": owner,
                 "proposalId": "MRV1E2",
                 "scientificMetadata": self.all_attributes,
                 "size": stat.st_size,
