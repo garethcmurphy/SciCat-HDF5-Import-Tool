@@ -9,6 +9,7 @@ requests = "*"
 "h5py" = "*"
 keyring = "*"
 numpy = "*"
+pytz = "*"
 
 [dev-packages]
 pylint = "*"

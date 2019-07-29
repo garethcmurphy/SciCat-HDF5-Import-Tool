@@ -2,6 +2,7 @@
 """read h5 files from directory"""
 import os
 import datetime
+import pytz
 
 import numpy
 import h5py
@@ -20,7 +21,7 @@ class ReadH5:
     def print_attrs(self, name, obj):
         """recursive"""
         for key, val in obj.attrs.items():
-            val2= val
+            val2 = val
             try:
                 val2 = val.decode('ascii')
             except AttributeError:
@@ -32,11 +33,8 @@ class ReadH5:
 
     def recursive(self, filename):
         """recursive"""
-        array = {}
         file = h5py.File(filename, 'r')
-        print("{")
         file.visititems(self.print_attrs)
-        print("}")
 
     def read(self):
         """read h5 files"""
@@ -47,23 +45,25 @@ class ReadH5:
         print(self.files)
         for file_name in self.files2:
             self.recursive(file_name)
-            print("all attributes", self.all_attributes)
+            # print("all attributes", self.all_attributes)
             stat = os.stat(file_name)
             file = h5py.File(file_name, 'r')
-            print(file_name)
+            # print(file_name)
             keys = list(file.keys())
+            file_attrs = file.attrs
             scimet = {}
             for key in keys:
                 attributes = file[key].attrs
-                print(attributes)
+                # print(attributes)
                 for name in attributes:
-                    print("{", name, ":", attributes[name], "}")
+                    # print("{", name, ":", attributes[name], "}")
                     binary = attributes[name]
                     scimet[key+'/'+name] = binary.decode('ascii')
             file.close()
-            print(scimet)
+            # print(scimet)
             sci = SciCatPost()
-            date = datetime.datetime.now().isoformat()
+            date = datetime.datetime.now().replace(tzinfo=pytz.utc).isoformat()
+            print(date)
             h5data = {
                 "contactEmail": "clement.derrez@esss.se",
                 "creationLocation": "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ",

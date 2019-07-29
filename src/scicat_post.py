@@ -62,7 +62,7 @@ class SciCatPost:
             "description":   h5data.get("description", "beam inst"),
             "endTime":   h5data.get("endTime", date),
             "isPublished": True,
-            "keywords":  h5data.get("keywords", ["neutron","beam"]),
+            "keywords":  h5data.get("keywords", ["neutron", "beam"]),
             "orcidOfOwner":  h5data.get("orcidOfOwner", "beam inst"),
             "owner":  h5data.get("owner", "Clement Derrez"),
             "ownerEmail":  h5data.get("ownerEmail", "MRV1E2"),
@@ -76,26 +76,27 @@ class SciCatPost:
             "sourceFolder":   h5data.get("sourceFolder", "owncloud"),
             "type": "raw"
         }
-        print(payload)
+        
+        # print(payload)
         return payload
 
     def post(self, h5data):
         """post to scicat"""
         token = self.get_access_token()
         uri = self.get_url(token)
-        print(uri)
+        # print(uri)
         prefix = "20.500.12269/"
         pid = "ghfjesl"
         payload = self.create_payload(pid, h5data)
         # response = requests.get(uri)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
-        print(delete_uri)
+        # print(delete_uri)
         response = requests.delete(delete_uri)
-        print(response.json())
+        # print(response.json())
         response = requests.post(uri, json=payload)
-        print(response.json())
-        print(self.url_base)
+        # print(response.json())
+        # print(self.url_base)
 
     def main(self):
         """post to scicat"""
