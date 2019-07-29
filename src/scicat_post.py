@@ -47,7 +47,7 @@ class SciCatPost:
 
         return token["id"]
 
-    def create_payload(self, pid):
+    def create_payload(self, pid, h5data):
         """create payload"""
         payload = {
             "principalInvestigator": "string1",
@@ -78,18 +78,19 @@ class SciCatPost:
                 "odin"
             ],
             "sampleId": "string11",
-            "proposalId": "string12"
+            "proposalId": "string12",
+            "scientificMetadata": h5data["scientificMetadata"]
         }
         return payload
 
-    def post(self):
+    def post(self, h5data):
         """post to scicat"""
         token = self.get_access_token()
         uri = self.get_url(token)
         print(uri)
         prefix = "20.500.12269/"
         pid = "ghfjesl"
-        payload = self.create_payload(pid)
+        payload = self.create_payload(pid, h5data)
         # response = requests.get(uri)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
@@ -102,9 +103,14 @@ class SciCatPost:
 
     def main(self):
         """post to scicat"""
-        self.post()
+        h5data = {
+            "scientificMetadata": {
+                "wavelength": 12
+            }
+        }
+        self.post(h5data)
 
 
 if __name__ == "__main__":
     SCI = SciCatPost()
-    SCI.post()
+    SCI.main()
