@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 "h5json" = "*"
+pytest = "*"
 
 [dev-packages]
 pylint = "*"
