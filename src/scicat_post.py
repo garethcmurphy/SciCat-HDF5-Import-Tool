@@ -2,6 +2,7 @@
 """post to scicat"""
 import platform
 import urllib
+import json
 
 import requests
 import keyring
@@ -12,7 +13,7 @@ class SciCatPost:
 
     url_base = "https://scicatapi.esss.dk"
     api = "/api/v3/"
-    url_fragment = "Datasets"
+    url_fragment = "RawDatasets"
     options = {}
 
     def __init__(self):
@@ -81,6 +82,7 @@ class SciCatPost:
             "proposalId": "string12",
             "scientificMetadata": h5data["scientificMetadata"]
         }
+        print(payload)
         return payload
 
     def post(self, h5data):
@@ -97,7 +99,7 @@ class SciCatPost:
         print(delete_uri)
         response = requests.delete(delete_uri)
         print(response.json())
-        response = requests.post(uri, payload)
+        response = requests.post(uri, json=payload)
         print(response.json())
         print(self.url_base)
 
