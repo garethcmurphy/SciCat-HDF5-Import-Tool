@@ -55,12 +55,17 @@ class ReadH5:
             file = h5py.File(file_name, 'r')
             file_attrs = {}
             for key, val in file.attrs.items():
-                file_attrs[key] = val
+                val2 = val
+                try:
+                    val2 = val.decode('ascii')
+                except AttributeError:
+                    pass
+                file_attrs[key] = val2
 
             print(file_attrs)
             date = datetime.datetime.now().replace(tzinfo=pytz.utc).isoformat()
             measurement_date = file_attrs.get("Measurement date", date)
-            date_object =dateutil.parser.parse(measurement_date)
+            date_object = dateutil.parser.parse(measurement_date)
             date_string = date_object.replace(tzinfo=pytz.utc).isoformat()
             print(date_string)
 
@@ -69,8 +74,9 @@ class ReadH5:
             sci = SciCatPost()
             # print(date)
             owncloud_location = "https://meas01.esss.lu.se/owncloud/index.php/s/83I00bOPX57kBPZ"
-            owner = "Clement Derrez"
+            owner = file_attrs.get("Operator name", "Clement Derrez")
             owner_email = "Clement.Derrez@esss.se"
+            self.all_attributes.update(file_attrs)
             h5data = {
                 "contactEmail": owner_email,
                 "creationLocation": owncloud_location,
