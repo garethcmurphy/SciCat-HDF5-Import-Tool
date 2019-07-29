@@ -1,4 +1,5 @@
 class SciCatPost:
+    url_base = "http://scicatapi.esss.dk"
     def __init__(self):
         pass
 
