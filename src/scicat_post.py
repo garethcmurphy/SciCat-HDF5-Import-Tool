@@ -20,6 +20,7 @@ class SciCatPost:
 
     def __init__(self):
         self.url_base = "http://localhost:3000"
+        self.url_base = "https://scicatapi.esss.dk"
         self.options = {
             'uri': self.url_base
         }
@@ -68,12 +69,10 @@ class SciCatPost:
             "owner":  h5data.get("owner", "Clement Derrez"),
             "ownerEmail":  h5data.get("ownerEmail", "MRV1E2"),
             "ownerGroup": "ess",
-            "packedSize": h5data.get("size", 0),
             "pid":  h5data.get("pid", "jfklds"),
             "principalInvestigator":   h5data.get("principalInvestigator", "beam inst"),
             "proposalId":  h5data.get("proposalId", "MRV1E2"),
             "scientificMetadata": h5data.get("scientificMetadata", {"a": 1}),
-            "size": h5data.get("size", 0),
             "sourceFolder":   h5data.get("sourceFolder", "owncloud"),
             "type": "raw"
         }
@@ -81,19 +80,20 @@ class SciCatPost:
         # print(payload)
         return payload
 
-    def sci_orig(self, prefix, pid, path, filename, stat):
+    def sci_orig(self, prefixedpid, pathtofile, stat, date_string):
         """post orig data blocks"""
+        permissions = oct(stat.st_mode & 0o777)
         orig = {
-            "size": 12,
+            "size": stat.st_size,
             "dataFileList": [
                 {
-                    "path": path + "/" + filename,
+                    "path": pathtofile,
                     "size": stat.st_size,
-                    "time": "2019-06-28T10:14:10.425Z",
+                    "time": date_string,
                     "chk": "string",
-                    "uid": "string",
-                    "gid": "string",
-                    "perm": "string"
+                    "uid": stat.st_uid,
+                    "gid":  stat.st_gid,
+                    "perm": permissions
                 }
             ],
             "ownerGroup": "ess",
@@ -101,7 +101,7 @@ class SciCatPost:
                 "loki",
                 "odin"
             ],
-            "datasetId": prefix+pid
+            "datasetId": prefixedpid
         }
 
         url = self.url_base + self.api + "OrigDatablocks" + "?access_token="+self.token
@@ -125,6 +125,7 @@ class SciCatPost:
         # print(uri)
         prefix = "20.500.12269/"
         pid = h5data.get("pid", "xyz")
+        prefixedpid = prefix+pid
         payload = self.create_payload(h5data)
         self.delete_orig(prefix, pid)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
@@ -133,7 +134,10 @@ class SciCatPost:
         response = requests.post(uri, json=payload)
         path = h5data.get("creationLocation", "owncloud")
         basename = os.path.basename(filename)
-        self.sci_orig(prefix, pid, path, basename, stat)
+        path_fragment="/download?path=%2F&files="
+        pathtofile = path + path_fragment + basename
+        date_string = h5data.get("endTime", "20190101T0101")
+        self.sci_orig(prefixedpid, pathtofile, stat, date_string)
         translate = response.json()
         print(translate["pid"])
 
@@ -146,7 +150,7 @@ class SciCatPost:
             }
         }
         stat = {
-            "st_size": 12
+            "st_size": 1123
         }
         self.post(h5data, filename, stat)
 
