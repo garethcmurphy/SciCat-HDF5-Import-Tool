@@ -81,6 +81,7 @@ class SciCatPost:
         return payload
 
     def sci_orig(self, prefix, pid, path, filename):
+        """post orig data blocks"""
         orig = {
             "size": 12,
             "dataFileList": [
@@ -103,7 +104,7 @@ class SciCatPost:
         }
 
         url = self.url_base + self.api + "OrigDatablocks"
-        response =requests.post(url, json=orig)
+        requests.post(url, json=orig)
         return 0
 
     def post(self, h5data, filename):
