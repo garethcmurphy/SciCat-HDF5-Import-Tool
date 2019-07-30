@@ -64,7 +64,6 @@ class SciCatPost:
             "endTime":   h5data.get("endTime", date),
             "isPublished": True,
             "keywords":  h5data.get("keywords", ["neutron", "beam"]),
-            "orcidOfOwner":  h5data.get("orcidOfOwner", "beam inst"),
             "owner":  h5data.get("owner", "Clement Derrez"),
             "ownerEmail":  h5data.get("ownerEmail", "MRV1E2"),
             "ownerGroup": "ess",
@@ -81,14 +80,14 @@ class SciCatPost:
         # print(payload)
         return payload
 
-    def sci_orig(self, prefix, pid, path, filename):
+    def sci_orig(self, prefix, pid, path, filename, stat):
         """post orig data blocks"""
         orig = {
             "size": 12,
             "dataFileList": [
                 {
-                    "path": filename,
-                    "size": 0,
+                    "path": path + "/" + filename,
+                    "size": stat.st_size,
                     "time": "2019-06-28T10:14:10.425Z",
                     "chk": "string",
                     "uid": "string",
@@ -111,7 +110,14 @@ class SciCatPost:
         print(response.json())
         return 0
 
-    def post(self, h5data, filename):
+    def delete_orig(self, prefix, pid):
+        """delete original data blocks"""
+        delete_orig_url = self.url_base + self.api + "Datasets/" + \
+            urllib.parse.quote_plus(prefix+pid) + \
+            "/origdatablocks?access_token=" + self.token
+        requests.delete(delete_orig_url)
+
+    def post(self, h5data, filename, stat):
         """post to scicat"""
         self.token = self.get_access_token()
         uri = self.get_url()
@@ -119,12 +125,13 @@ class SciCatPost:
         prefix = "20.500.12269/"
         pid = h5data.get("pid", "xyz")
         payload = self.create_payload(h5data)
+        self.delete_orig(prefix, pid)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+self.token
         requests.delete(delete_uri)
         response = requests.post(uri, json=payload)
         path = h5data.get("creationLocation", "owncloud")
-        self.sci_orig(prefix, pid, path, filename)
+        self.sci_orig(prefix, pid, path, filename, stat)
         translate = response.json()
         print(translate["pid"])
 
@@ -136,7 +143,10 @@ class SciCatPost:
                 "wavelength": 12
             }
         }
-        self.post(h5data, filename)
+        stat = {
+            "st_size": 12
+        }
+        self.post(h5data, filename, stat)
 
 
 if __name__ == "__main__":
