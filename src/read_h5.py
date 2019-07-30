@@ -48,7 +48,7 @@ class ReadH5:
         self.files2 = [self.files[0]]
         print(self.files)
         dataset_offset = 4
-        for file_name in self.files:
+        for file_name in self.files2:
             print(emoji.emojize(':bus:  processing '), file_name)
             dataset_offset = dataset_offset + 1
             pid_number = "beam" + str(dataset_offset).zfill(4)

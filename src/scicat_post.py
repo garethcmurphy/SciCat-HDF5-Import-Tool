@@ -15,6 +15,7 @@ class SciCatPost:
     api = "/api/v3/"
     url_fragment = "Datasets"
     options = {}
+    token = ""
 
     def __init__(self):
         self.url_base = "http://localhost:3000"
@@ -22,9 +23,9 @@ class SciCatPost:
             'uri': self.url_base
         }
 
-    def get_url(self, token):
+    def get_url(self):
         """get URL"""
-        uri = self.url_base + self.api + self.url_fragment + "?access_token=" + token
+        uri = self.url_base + self.api + self.url_fragment + "?access_token=" + self.token
         print(uri)
         return uri
 
@@ -100,23 +101,26 @@ class SciCatPost:
                 "loki",
                 "odin"
             ],
-            "datasetId": prefix+"/"+pid
+            "datasetId": prefix+pid
         }
 
-        url = self.url_base + self.api + "OrigDatablocks"
-        requests.post(url, json=orig)
+        url = self.url_base + self.api + "OrigDatablocks" + "?access_token="+self.token
+        print("gm url: ", url)
+        print("gm orig", orig)
+        response = requests.post(url, json=orig)
+        print(response.json())
         return 0
 
     def post(self, h5data, filename):
         """post to scicat"""
-        token = self.get_access_token()
-        uri = self.get_url(token)
+        self.token = self.get_access_token()
+        uri = self.get_url()
         # print(uri)
         prefix = "20.500.12269/"
         pid = h5data.get("pid", "xyz")
         payload = self.create_payload(h5data)
         delete_uri = self.url_base + self.api + "RawDatasets/" + \
-            urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
+            urllib.parse.quote_plus(prefix+pid) + "?access_token="+self.token
         requests.delete(delete_uri)
         response = requests.post(uri, json=payload)
         path = h5data.get("creationLocation", "owncloud")

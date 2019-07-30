@@ -3,6 +3,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[scripts]
+start = "./src/read_h5.py"
+
 [packages]
 "h5json" = "*"
 requests = "*"
