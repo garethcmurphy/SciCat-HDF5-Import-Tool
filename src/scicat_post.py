@@ -80,7 +80,33 @@ class SciCatPost:
         # print(payload)
         return payload
 
-    def post(self, h5data):
+    def sci_orig(self, prefix, pid, path, filename):
+        orig = {
+            "size": 12,
+            "dataFileList": [
+                {
+                    "path": filename,
+                    "size": 0,
+                    "time": "2019-06-28T10:14:10.425Z",
+                    "chk": "string",
+                    "uid": "string",
+                    "gid": "string",
+                    "perm": "string"
+                }
+            ],
+            "ownerGroup": "ess",
+            "accessGroups": [
+                "loki",
+                "odin"
+            ],
+            "datasetId": prefix+"/"+pid
+        }
+
+        url = self.url_base + self.api + "OrigDatablocks"
+        response =requests.post(url, json=orig)
+        return 0
+
+    def post(self, h5data, filename):
         """post to scicat"""
         token = self.get_access_token()
         uri = self.get_url(token)
@@ -92,17 +118,20 @@ class SciCatPost:
             urllib.parse.quote_plus(prefix+pid) + "?access_token="+token
         requests.delete(delete_uri)
         response = requests.post(uri, json=payload)
+        path = h5data.get("creationLocation", "owncloud")
+        self.sci_orig(prefix, pid, path, filename)
         translate = response.json()
         print(translate["pid"])
 
     def main(self):
         """post to scicat"""
+        filename = "rferf"
         h5data = {
             "scientificMetadata": {
                 "wavelength": 12
             }
         }
-        self.post(h5data)
+        self.post(h5data, filename)
 
 
 if __name__ == "__main__":

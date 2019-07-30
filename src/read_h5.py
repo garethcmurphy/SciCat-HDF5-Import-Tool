@@ -21,6 +21,8 @@ class ReadH5:
     def __init__(self):
         pass
 
+
+
     def print_attrs(self, name, obj):
         """recursive"""
         for key, val in obj.attrs.items():
@@ -98,7 +100,8 @@ class ReadH5:
                 "sourceFolder": owncloud_location,
                 "type": "raw"
             }
-            sci.post(h5data)
+            sci.post(h5data, file_name)
+
 
     def main(self):
         """main"""
