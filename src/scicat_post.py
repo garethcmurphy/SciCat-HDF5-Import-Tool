@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """post to scicat"""
+import os
 import datetime
 import platform
 import urllib
@@ -131,7 +132,8 @@ class SciCatPost:
         requests.delete(delete_uri)
         response = requests.post(uri, json=payload)
         path = h5data.get("creationLocation", "owncloud")
-        self.sci_orig(prefix, pid, path, filename, stat)
+        basename = os.path.basename(filename)
+        self.sci_orig(prefix, pid, path, basename, stat)
         translate = response.json()
         print(translate["pid"])
 
